@@ -36,6 +36,9 @@ class NotebooksPipelineLinks(object):
             elif item.get('especifications','') in self.collection.distinct('especifications'):
                 logger.info("Notebook adicionado no banco de dados MongoDB!")
                 self.collection.insert(dict(item))
+            elif not item.get('title') in self.collection.distinct('title'):
+                logger.info("Notebook adicionado no banco de dados MongoDB!")
+                self.collection.insert(dict(item))
         return item
 
 class NotebooksPipelineInfos(object):
