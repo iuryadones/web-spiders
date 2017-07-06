@@ -25,7 +25,7 @@ class PortalTransparenciaSpider(Spider):
     custom_settings = {
         'DOWNLOADER_MIDDLEWARES': DOWNLOADER_MIDDLEWARES,
         'DOWNLOAD_DELAY': 0,
-        'CONCURRENT_REQUESTS':10
+        'CONCURRENT_REQUESTS':1
     }
 
 
