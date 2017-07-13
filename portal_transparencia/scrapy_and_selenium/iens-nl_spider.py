@@ -17,17 +17,15 @@ DOWNLOADER_MIDDLEWARES.update({
     'middleware_hydra.SeleniumMiddleware': 200
 })
 
-class PortalTransparenciaSpider(Spider):
-    name = "portal-transparencia"
-    allowed_domains = ["web"]
-    # start_urls = ['http://www.portaltransparencia.gov.br/']
+class BaseSpider(Spider):
+    name = "iens"
+    allowed_domains = ["iens.nl"]
     start_urls = ['http://www.iens.nl']
     custom_settings = {
         'DOWNLOADER_MIDDLEWARES': DOWNLOADER_MIDDLEWARES,
         'DOWNLOAD_DELAY': 0,
         'CONCURRENT_REQUESTS':1
     }
-
 
     def parse(self, response):
         text_box = response.meta['driver'].find_element_by_xpath('//*[@id="searchText"]')
@@ -47,18 +45,7 @@ class PortalTransparenciaSpider(Spider):
         item = loader.load_item()
         yield item
 
-        return self.render_js
-
-    def render_js(self, response):
-        response.meta['driver'].get(response.url)
-        body = to_bytes(response.meta['driver'].page_source)
-
-        return HtmlResponse(
-            url=response.meta['driver'].current_url,
-            body=body,
-            encoding='utf-8'
-        )
 
 process = CrawlerProcess()
-process.crawl(PortalTransparenciaSpider)
+process.crawl(BaseSpider)
 process.start()
