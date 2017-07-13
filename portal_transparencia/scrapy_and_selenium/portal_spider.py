@@ -27,6 +27,12 @@ DOWNLOADER_MIDDLEWARES.update({
     'middleware_hydra.SeleniumMiddleware': 200
 })
 
+ITEM_PIPELINES = settings.get('ITEM_PIPELINES').copy()
+ITEM_PIPELINES.update({
+    'pipelines.MunicipiosPipelineLinks': 100,
+    'pipelines.MunicipiosPipelineInfos': 300
+})
+
 class PortalTransparenciaSpider(Spider):
     name = "portal-transparencia"
     allowed_domains = ["portaltransparencia.gov.br"]
@@ -34,7 +40,8 @@ class PortalTransparenciaSpider(Spider):
     start_urls = [URL['recursos'](2017)]
     custom_settings = {
         'DOWNLOADER_MIDDLEWARES': DOWNLOADER_MIDDLEWARES,
-        'CONCURRENT_REQUESTS': 200,
+        'ITEM_PIPELINES': ITEM_PIPELINES,
+        'CONCURRENT_REQUESTS': 100,
         'DOWNLOAD_DELAY': 0,
     }
 
