@@ -35,15 +35,20 @@ ITEM_PIPELINES.update({
 
 class PortalTransparenciaSpider(Spider):
     name = "portal-transparencia"
+    tipo = "despesas"
+    ano = "2011"
     allowed_domains = ["portaltransparencia.gov.br"]
     domain = 'http://www.portaltransparencia.gov.br/'
-    start_urls = [URL['recursos'](2017)]
+    start_urls = [URL['recursos'](ano)]
     custom_settings = {
         'DOWNLOADER_MIDDLEWARES': DOWNLOADER_MIDDLEWARES,
         'ITEM_PIPELINES': ITEM_PIPELINES,
         'CONCURRENT_REQUESTS': 100,
         'DOWNLOAD_DELAY': 0,
     }
+
+    def __init__(self):
+        super().__init__()
 
     def parse(self, response):
         estados = _limpar(response.xpath(XPATH['estado_text']).extract())
@@ -151,13 +156,15 @@ class PortalTransparenciaSpider(Spider):
             for i in range(len(funcoes)):
                 acoes.append(
                     {
-                        'funcoes': funcoes[i],
-                        'acao_governamental': acoes_governamentais[i],
-                        'total_no_ano': float(
+                        'funcao': funcoes[i],
+                        'acao': acoes_governamentais[i],
+                        'total': float(
                             totais_no_ano[i].replace('.','').replace(',','.'))
                     }
                 )
             item['acoes'] = acoes
+            item['tipo'] = self.tipo
+            item['ano'] = self.ano
             yield item
 
         else:

@@ -6,6 +6,8 @@ class PropertiesItem(Item):
     url = Field()
 
 class TransparenteItem(Item):
+    ano = Field()
+    tipo = Field()
     estado = Field()
     municipio = Field()
     acoes = Field()
